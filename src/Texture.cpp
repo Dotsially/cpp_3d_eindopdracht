@@ -1,10 +1,11 @@
 #include "texture.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
 
 Texture::Texture(){
     glGenTextures(1, &textureID);
- }
+}
 
 void Texture::InitializeFromFile(std::string fileName){
     std::string filePath = "resources/textures/" + fileName;

@@ -2,7 +2,10 @@
 #include <iostream>
 
 
-Window::Window(std::string title, int width, int height){
+Window::Window(){}
+Window::~Window(){}
+
+void Window::InitializeWindow(std::string title, int width, int height){
     WINDOW_WIDTH = width;
     WINDOW_HEIGHT = height;
     
@@ -50,6 +53,11 @@ Window::Window(std::string title, int width, int height){
     glViewport(0,0,1280,720);
 }
 
+void Window::DestroyWindow(){
+    SDL_DestroyWindow(this->window);
+    SDL_Quit();
+}
+
 void Window::Update(bool centeredMouse){
     if(centeredMouse){
             SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -58,11 +66,6 @@ void Window::Update(bool centeredMouse){
     else{
             SDL_SetRelativeMouseMode(SDL_FALSE);
     }
-}
-
-Window::~Window(){
-    SDL_DestroyWindow( this->window );
-    SDL_Quit();
 }
 
 bool Window::WindowShouldClose(){

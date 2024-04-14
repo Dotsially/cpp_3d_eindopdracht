@@ -1,18 +1,17 @@
 #include "camera.h"
 #include <iostream>
 
-Camera::Camera(glm::vec3 position){
+Camera::Camera(){ }
+
+Camera::~Camera(){ }
+
+void Camera::Initialize(glm::vec3 position){
     this->position = position;
     this->target = glm::vec3{5.0f,0.0f,5.0f};
     this->up = glm::vec3{0.0f,1.0f,0.0f};;
     this->fov = glm::radians(60.0);
     this->angle = glm::vec2(0,0);
 }
-
-Camera::~Camera(){
-    
-}
-
 
 void Camera::Update(const u8* keystate, glm::vec3 targetPosition){    
     int x;

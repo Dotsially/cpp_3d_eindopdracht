@@ -21,8 +21,9 @@ class Camera{
     f32 pitch;
 
 public:
-    Camera(glm::vec3 position);
+    Camera();
     ~Camera();
+    void Initialize(glm::vec3 position);
     void Update(const u8* keystate, glm::vec3 targetPosition);
     glm::mat4 GetViewProjectionMatrix();
     glm::vec3 GetPosition();

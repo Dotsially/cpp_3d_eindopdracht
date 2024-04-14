@@ -14,8 +14,10 @@ class Window{
     bool quit = false;
 
     public:
-    Window(std::string title, int width, int height);
+    Window();
     ~Window();
+    void InitializeWindow(std::string title, int width, int height);
+    void DestroyWindow();
     bool WindowShouldClose();
     void Quit();
     void PollEvents();
