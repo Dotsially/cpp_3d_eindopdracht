@@ -4,8 +4,11 @@
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(std::string vertexPath, std::string fragmentPath)
-{
+Shader::Shader(){ }
+
+Shader::~Shader(){ }
+
+void Shader::InitializeShader(std::string vertexPath, std::string fragmentPath){
     int vertexShader = GenShader("resources/shaders/" + vertexPath, GL_VERTEX_SHADER);
     int fragmentShader = GenShader("resources/shaders/" + fragmentPath, GL_FRAGMENT_SHADER);
 
@@ -20,11 +23,11 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
     glDeleteShader(fragmentShader);
 }
 
-Shader::~Shader(){
+void Shader::DestroyShader(){
     glDeleteProgram(this->programID);
 }
 
-inline void Shader::UseProgram()
+void Shader::UseProgram()
 {
     glUseProgram(this->programID);
 }

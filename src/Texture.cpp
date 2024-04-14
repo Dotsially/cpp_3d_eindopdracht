@@ -1,12 +1,14 @@
 #include "texture.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
 
-Texture::Texture(){
-    glGenTextures(1, &textureID);
- }
+Texture::Texture(){}
+Texture::~Texture(){}
 
 void Texture::InitializeFromFile(std::string fileName){
+    glGenTextures(1, &textureID);
+    
     std::string filePath = "resources/textures/" + fileName;
     glBindTexture(GL_TEXTURE_2D, textureID); 
 
@@ -33,11 +35,11 @@ void Texture::InitializeFromFile(std::string fileName){
     stbi_image_free(data);
 }
 
-Texture::~Texture(){
+void Texture::DestroyTexture(){
     glDeleteTextures(1, &textureID);
 }
 
-inline void Texture::ActivateTexture(i32 textureUnit){
+void Texture::ActivateTexture(i32 textureUnit){
     glActiveTexture(textureUnit);
     glBindTexture(GL_TEXTURE_2D, textureID); 
 }

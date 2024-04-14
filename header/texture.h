@@ -11,5 +11,6 @@ public:
     ~Texture();
 
     void InitializeFromFile(std::string fileName);
-    inline void ActivateTexture(i32 textureUnit);
+    void DestroyTexture();
+    void ActivateTexture(i32 textureUnit);
 };

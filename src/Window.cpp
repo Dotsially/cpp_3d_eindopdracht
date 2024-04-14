@@ -2,7 +2,10 @@
 #include <iostream>
 
 
-Window::Window(std::string title, int width, int height){
+Window::Window(){}
+Window::~Window(){}
+
+void Window::InitializeWindow(std::string title, int width, int height){
     WINDOW_WIDTH = width;
     WINDOW_HEIGHT = height;
     
@@ -40,14 +43,15 @@ Window::Window(std::string title, int width, int height){
         std::cout << "Failed to load OpenGL" << std::endl;
         quit = true;
     }
-
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);  
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    
     SDL_GL_SetSwapInterval(0);
 
     glViewport(0,0,1280,720);
+}
+
+void Window::DestroyWindow(){
+    SDL_DestroyWindow(this->window);
+    SDL_Quit();
 }
 
 void Window::Update(bool centeredMouse){
@@ -58,11 +62,6 @@ void Window::Update(bool centeredMouse){
     else{
             SDL_SetRelativeMouseMode(SDL_FALSE);
     }
-}
-
-Window::~Window(){
-    SDL_DestroyWindow( this->window );
-    SDL_Quit();
 }
 
 bool Window::WindowShouldClose(){

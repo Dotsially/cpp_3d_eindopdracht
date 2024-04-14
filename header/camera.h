@@ -19,11 +19,13 @@ class Camera{
     f32 fov;
     f32 yaw;
     f32 pitch;
+    f32 zoomLevel;
 
 public:
-    Camera(glm::vec3 position);
+    Camera();
     ~Camera();
-    void Update(const u8* keystate, glm::vec3 targetPosition);
+    void InitializeCamera(glm::vec3 position);
+    void Update(glm::vec3 targetPosition);
     glm::mat4 GetViewProjectionMatrix();
     glm::vec3 GetPosition();
     glm::vec3 GetTarget();

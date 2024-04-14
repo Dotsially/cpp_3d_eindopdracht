@@ -2,7 +2,11 @@
 #include <iostream>
 
 
-RenderObject::RenderObject(){
+RenderObject::RenderObject(){}
+
+RenderObject::~RenderObject(){}
+
+void RenderObject::IntializeRenderObject(){
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ivbo);
     glGenBuffers(1, &ebo);
@@ -10,7 +14,7 @@ RenderObject::RenderObject(){
     glGenVertexArrays(1, &vao);
 }
 
-RenderObject::~RenderObject(){ 
+void RenderObject::DestroyRenderObject(){
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ivbo);
     glDeleteBuffers(1, &ebo);
@@ -18,10 +22,9 @@ RenderObject::~RenderObject(){
     glDeleteVertexArrays(1, &vao);  
 }
 
-
 void RenderObject::BufferData(BufferType bufferType, i32 usage, void* data, i32 dataLength, i32 dataSize){
     glBindVertexArray(vao);
-    u32 bufferTarget;
+    u32 bufferTarget = 0;
 
     switch (bufferType){
         case VERTEX_BUFFER:
@@ -48,7 +51,7 @@ void RenderObject::BufferData(BufferType bufferType, i32 usage, void* data, i32 
     glBindBuffer(bufferTarget, 0);
 }
 
-void RenderObject::AddAttribute(u8 isInstanced, u8 isFloat, i32 attributeType, i32 dataSize, i32 stride, i32 offset){
+void RenderObject::AddAttribute(u8 isInstanced, u8 isFloat, i32 attributeType, i32 vectorCount, i32 stride, i32 offset){
     glBindVertexArray(vao);
 
     if(isInstanced){
@@ -60,10 +63,10 @@ void RenderObject::AddAttribute(u8 isInstanced, u8 isFloat, i32 attributeType, i
     }
     
     if(isFloat){
-        glVertexAttribPointer(attributeCount, dataSize, attributeType, GL_FALSE, stride, (void*)(offset));
+        glVertexAttribPointer(attributeCount, vectorCount, attributeType, GL_FALSE, stride, (void*)(offset));
     }    
     else{
-        glVertexAttribIPointer(attributeCount, dataSize, attributeType, stride, (void*)(offset));
+        glVertexAttribIPointer(attributeCount, vectorCount, attributeType, stride, (void*)(offset));
     }
     
     glEnableVertexAttribArray(attributeCount);
@@ -78,11 +81,29 @@ void RenderObject::Draw(DrawType drawType, i32 primitiveType, i32 count){
 
     switch(drawType){
         case DRAW_ARRAY:
-            glMultiDrawArraysIndirect(primitiveType, 0, count, sizeof(DrawArraysIndirectCommand));
+            glDrawArrays(primitiveType, 0, count);
             break;
         case DRAW_ELEMENT:  
-            glMultiDrawElementsIndirect(primitiveType, GL_UNSIGNED_INT, 0, count, sizeof(DrawElementsIndirectCommand));
+            glDrawElements(primitiveType, count, GL_UNSIGNED_INT, 0);
             break;
     }
+    glBindVertexArray(0);
+}
+
+void RenderObject::DrawIndirect(DrawType drawType, i32 primitiveType, i32 count){
+    glBindVertexArray(vao);
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ibo);
+
+    //Last parameter is 0 because its tightly packed
+    switch(drawType){
+        case DRAW_ARRAY:
+            glMultiDrawArraysIndirect(primitiveType, 0, count, 0);
+            break;
+        case DRAW_ELEMENT:  
+            glMultiDrawElementsIndirect(primitiveType, GL_UNSIGNED_INT, 0, count, 0);
+            break;
+    }
+    
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ibo);
     glBindVertexArray(0);
 }

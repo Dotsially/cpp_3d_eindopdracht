@@ -13,9 +13,11 @@ private:
     void CheckCompileErrors(u32 id, std::string type);
 
 public:
-    Shader(std::string vertexPath, std::string fragmentPath);
+    Shader();
     ~Shader();
 
-    inline void UseProgram();
+    void InitializeShader(std::string vertexPath, std::string fragmentPath);
+    void DestroyShader();
+    void UseProgram();
     u32 GetProgram();
 };
