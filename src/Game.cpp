@@ -10,40 +10,37 @@ Game::~Game(){}
 
 void Game::Run(){
     Init();
-    GameLoop();
+
+    while(!window.WindowShouldClose()){
+        Update();
+        Render();
+    }
+
     Close();
 }
 
 void Game::Init(){
     window.InitializeWindow(title, screenWidth, screenHeight);
-    camera.InitializeCamera(glm::vec3{128,32,128});
-    model.LoadModel("map/map.gltf");
-    shader.InitializeShader("model_vertex.glsl", "model_fragment.glsl");
-    texture.InitializeFromFile("terrain.png");
+    camera.InitializeCamera(glm::vec3{16,0,16});
 
-    ro.IntializeRenderObject();
-    ro.BufferData(VERTEX_BUFFER, GL_STATIC_DRAW, model.GetVertices()->data(), model.GetVertices()->size(), sizeof(f32));
-    ro.BufferData(ELEMENT_BUFFER, GL_STATIC_DRAW, model.GetIndices()->data(), model.GetIndices()->size(), sizeof(u32));
-    ro.AddAttribute(false, true, GL_FLOAT, 3, 8 * sizeof(float), 0);
-    ro.AddAttribute(false, true, GL_FLOAT, 3, 8 * sizeof(float), 3 * sizeof(float));
-    ro.AddAttribute(false, true, GL_FLOAT, 2, 8 * sizeof(float), 6 * sizeof(float));
+    //initialize the background
+    std::vector<f32> backgroundQuad = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
+    background.texture.InitializeFromFile("space.png");
+    background.shader.InitializeShader("basic_vertex.glsl", "basic_fragment.glsl");
+    background.render.IntializeRenderObject();
+    background.render.BufferData(VERTEX_BUFFER, GL_STATIC_DRAW, backgroundQuad.data(), backgroundQuad.size(), sizeof(f32));
+    background.render.AddAttribute(false, true, GL_FLOAT, 2,0,0);
 
-
+    GameObject* earthLike = new GameObject();
+    earthLike->AddDrawComponent(new ModelComponent("earthlike/earth_like.gltf", "planet_palette.png"));
+    gameObjects.push_back(earthLike);
+    
     glEnable(GL_DEPTH_TEST);
 }
 
-void Game::GameLoop(){
-    while(!window.WindowShouldClose()){
-        Update();
-        Render();
-    }
-}
-
 void Game::Update(){
+    //Poll events
     window.PollEvents();
-    window.Update(true);
-    camera.Update(glm::vec3{0,10,0});
-
     const u8* keystate = SDL_GetKeyboardState(NULL);
     SDL_Event e = window.GetEvent();
     if(e.type == SDL_QUIT){
@@ -52,24 +49,43 @@ void Game::Update(){
     else if(keystate[SDL_SCANCODE_ESCAPE]){
         window.Quit();
     }
+
+    //Calculate deltaTime
+    f64 currentFrameTime = SDL_GetTicks64();
+	f64 deltaTime = currentFrameTime - lastFrameTime;
+    lastFrameTime = currentFrameTime;
+
+    window.Update(true);
+
+    for(auto gameObject : gameObjects){
+        gameObject->Update(deltaTime);
+    }
+
+    camera.Update(glm::vec3{0,0,0});
 }
 
 void Game::Render(){
     glClearColor(0.6, 0.7, 0.9, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader.UseProgram();
-    texture.ActivateTexture(0);
-    glm::mat project_view = camera.GetViewProjectionMatrix();
-    glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(project_view));
-    ro.Draw(DRAW_ELEMENT, GL_TRIANGLES, model.GetIndices()->size());
+    
+    glDepthFunc(GL_LESS);
+
+    glm::mat4 projectionView = camera.GetViewProjectionMatrix();
+    for(auto gameObject : gameObjects){
+        gameObject->Draw(projectionView);
+    }
+    
+
+    //Make it so the background is renderered behind every object
+    glDepthFunc(GL_EQUAL);
+    background.shader.UseProgram();
+    background.texture.ActivateTexture(0);
+    background.render.Draw(DRAW_ARRAY, GL_TRIANGLE_STRIP, 4);
 
     window.SwapBuffers();
 }
 
 void Game::Close(){
-    texture.DestroyTexture();
-    ro.DestroyRenderObject();
-    shader.DestroyShader();
     window.DestroyWindow();
 }

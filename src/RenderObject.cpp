@@ -104,6 +104,6 @@ void RenderObject::DrawIndirect(DrawType drawType, i32 primitiveType, i32 count)
             break;
     }
     
-    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ibo);
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     glBindVertexArray(0);
 }

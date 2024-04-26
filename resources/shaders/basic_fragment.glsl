@@ -1,6 +1,5 @@
 #version 460 core
 
-
 uniform sampler2D tex;
 
 layout (location = 0) in vec2 uvCoord;

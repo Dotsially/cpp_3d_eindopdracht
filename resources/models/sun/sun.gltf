@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v1.8.19",
+        "generator" : "Khronos glTF Blender I/O v3.3.36",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -15,7 +15,7 @@
     "nodes" : [
         {
             "mesh" : 0,
-            "name" : "Grid"
+            "name" : "Icosphere"
         }
     ],
     "materials" : [
@@ -26,13 +26,14 @@
                 "baseColorTexture" : {
                     "index" : 0
                 },
-                "metallicFactor" : 0
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
             }
         }
     ],
     "meshes" : [
         {
-            "name" : "Grid",
+            "name" : "Icosphere.002",
             "primitives" : [
                 {
                     "attributes" : {
@@ -55,78 +56,82 @@
     "images" : [
         {
             "mimeType" : "image/png",
-            "name" : "terrain",
-            "uri" : "textures/terrain.png"
+            "name" : "planet palette",
+            "uri" : "textures/planet%20palette.png"
         }
     ],
     "accessors" : [
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 58527,
+            "count" : 960,
             "max" : [
-                50,
-                17,
-                50
+                2,
+                2,
+                1.999999761581421
             ],
             "min" : [
-                -50,
-                -1,
-                -50
+                -1.9999998807907104,
+                -2,
+                -2
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 58527,
+            "count" : 960,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5126,
-            "count" : 58527,
+            "count" : 960,
             "type" : "VEC2"
         },
         {
             "bufferView" : 3,
             "componentType" : 5123,
-            "count" : 87504,
+            "count" : 960,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 702324,
-            "byteOffset" : 0
+            "byteLength" : 11520,
+            "byteOffset" : 0,
+            "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 702324,
-            "byteOffset" : 702324
+            "byteLength" : 11520,
+            "byteOffset" : 11520,
+            "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 468216,
-            "byteOffset" : 1404648
+            "byteLength" : 7680,
+            "byteOffset" : 23040,
+            "target" : 34962
         },
         {
             "buffer" : 0,
-            "byteLength" : 175008,
-            "byteOffset" : 1872864
+            "byteLength" : 1920,
+            "byteOffset" : 30720,
+            "target" : 34963
         }
     ],
     "samplers" : [
         {
-            "magFilter" : 9728,
-            "minFilter" : 9984
+            "magFilter" : 9729,
+            "minFilter" : 9987
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 2047872,
-            "uri" : "map.bin"
+            "byteLength" : 32640,
+            "uri" : "sun.bin"
         }
     ]
 }
