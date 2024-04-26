@@ -1,5 +1,8 @@
 #define SDL_MAIN_HANDLED
+<<<<<<< HEAD
 #define FNL_IMPL
+=======
+>>>>>>> 7ba55e870f6cec8049422a1aa48775b6d91a63c9
 #include "game.h"
 #include <iostream>
 

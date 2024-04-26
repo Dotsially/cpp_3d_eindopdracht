@@ -3,7 +3,6 @@
 #include "glad/glad.h"
 #include "camera.h"
 #include "window.h"
-#include "world.h"
 #include "model.h"
 
 class Game{
