@@ -6,6 +6,11 @@
 #include "model.h"
 #include "game_object.h"
 #include "model_component.h"
+#include "unshaded_model_component.h"
+#include "planet_component.h"
+#include "spaceship_component.h"
+#include "follow_component.h"
+#include "particle_component.h"
 
 //Box data together
 struct Background{
@@ -23,7 +28,7 @@ private:
 
     Window window;
     Camera camera;
-    Background background;
+    Background ui;
     std::vector<GameObject*> gameObjects;
     
 

@@ -21,19 +21,69 @@ void Game::Run(){
 
 void Game::Init(){
     window.InitializeWindow(title, screenWidth, screenHeight);
-    camera.InitializeCamera(glm::vec3{16,0,16});
 
-    //initialize the background
+    //initialize the ui
     std::vector<f32> backgroundQuad = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
-    background.texture.InitializeFromFile("space.png");
-    background.shader.InitializeShader("basic_vertex.glsl", "basic_fragment.glsl");
-    background.render.IntializeRenderObject();
-    background.render.BufferData(VERTEX_BUFFER, GL_STATIC_DRAW, backgroundQuad.data(), backgroundQuad.size(), sizeof(f32));
-    background.render.AddAttribute(false, true, GL_FLOAT, 2,0,0);
+    ui.texture.InitializeFromFile("space.png");
+    ui.shader.InitializeShader("basic_vertex.glsl", "basic_fragment.glsl");
+    ui.render.IntializeRenderObject();
+    ui.render.BufferData(VERTEX_BUFFER, GL_STATIC_DRAW, backgroundQuad.data(), backgroundQuad.size(), sizeof(f32));
+    ui.render.AddAttribute(false, true, GL_FLOAT, 2,0,0);
+
+    GameObject* spaceShip = new GameObject();
+    spaceShip->AddDrawComponent(new ModelComponent("spaceship/spaceship.gltf", "spaceship_palette.png"));
+    spaceShip->AddComponent(new SpaceshipComponent(camera.GetAngle()));
+    spaceShip->position = glm::vec3(0.0f, 4.0f, 0.5f);
+    spaceShip->scale = glm::vec3(0.1f);
+    gameObjects.push_back(spaceShip);
+
+    GameObject* smokeParticle = new GameObject();
+    spaceShip->AddDrawComponent(new ParticleComponent(&spaceShip->position, camera.GetRight(), camera.GetUp(), PARTICLE_POINT, 20, 0, "star.png"));
+    
+    
+    GameObject* stars = new GameObject();
+    stars->AddDrawComponent(new ParticleComponent(&spaceShip->position, camera.GetRight(), camera.GetUp(), PARTICLE_SPHERE, 10000, 200, "star.png"));
+    gameObjects.push_back(stars);
+
+    GameObject* skybox = new GameObject();
+    skybox->AddDrawComponent(new UnshadedModelComponent("skybox/skybox.gltf", "gradient.png"));
+    skybox->scale = glm::vec3{900.0f};
+    gameObjects.push_back(skybox);  
+
+    GameObject* sun = new GameObject();
+    sun->AddDrawComponent(new UnshadedModelComponent("sun/sun.gltf", "planet_palette.png"));
+    sun->scale = glm::vec3{1.6};
+    gameObjects.push_back(sun);
+
+    GameObject* gasGiant = new GameObject();
+    gasGiant->AddDrawComponent(new ModelComponent("gasgiant/gas_giant.gltf", "planet_palette.png"));
+    gasGiant->AddComponent(new PlanetComponent(&sun->position, 70.0f, 0.001f, 0.00009f, 23, 0.0f));
+    gasGiant->scale = glm::vec3{2.5};
+    gameObjects.push_back(gasGiant);
+
+    GameObject* ringPlanet = new GameObject();
+    ringPlanet->AddDrawComponent(new ModelComponent("ringplanet/ring_planet.gltf", "planet_palette.png"));
+    ringPlanet->AddComponent(new PlanetComponent(&sun->position, 50.0f, 0.002f, 0.00005f, 10, glm::radians(15.0f)));
+    ringPlanet->scale = glm::vec3{1.5};
+    gameObjects.push_back(ringPlanet);
 
     GameObject* earthLike = new GameObject();
     earthLike->AddDrawComponent(new ModelComponent("earthlike/earth_like.gltf", "planet_palette.png"));
+    earthLike->AddComponent(new PlanetComponent(&sun->position, 26.0f, 0.003f, 0.0001f, 5, glm::radians(23.5f)));
     gameObjects.push_back(earthLike);
+
+    GameObject* moon = new GameObject();
+    moon->AddDrawComponent(new ModelComponent("moon/moon.gltf", "planet_palette.png"));
+    moon->AddComponent(new PlanetComponent(&earthLike->position, 2.0f, 0.002f, 0.001f, 0, 0.0f));
+    moon->scale = glm::vec3(0.4f);
+    gameObjects.push_back(moon);
+
+    GameObject* barren = new GameObject();
+    barren->AddDrawComponent(new ModelComponent("barren/barren.gltf", "planet_palette.png"));
+    barren->AddComponent(new PlanetComponent(&sun->position, 8.0f, 0.002f, 0.00009f, 65, 0.0f));
+    gameObjects.push_back(barren);
+
+    camera.InitializeCamera(&spaceShip->position);
     
     glEnable(GL_DEPTH_TEST);
 }
@@ -61,27 +111,23 @@ void Game::Update(){
         gameObject->Update(deltaTime);
     }
 
-    camera.Update(glm::vec3{0,0,0});
+    camera.Update();
 }
 
 void Game::Render(){
-    glClearColor(0.6, 0.7, 0.9, 1.0);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    
-    glDepthFunc(GL_LESS);
 
     glm::mat4 projectionView = camera.GetViewProjectionMatrix();
     for(auto gameObject : gameObjects){
         gameObject->Draw(projectionView);
     }
-    
 
-    //Make it so the background is renderered behind every object
-    glDepthFunc(GL_EQUAL);
-    background.shader.UseProgram();
-    background.texture.ActivateTexture(0);
-    background.render.Draw(DRAW_ARRAY, GL_TRIANGLE_STRIP, 4);
+    // //Make it so the background is renderered behind every object
+    // glDepthFunc(GL_EQUAL);
+    // background.shader.UseProgram();
+    // background.texture.ActivateTexture(0);
+    // background.render.Draw(DRAW_ARRAY, GL_TRIANGLE_STRIP, 4);
 
     window.SwapBuffers();
 }

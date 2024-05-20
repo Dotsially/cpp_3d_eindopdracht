@@ -10,27 +10,26 @@ class Camera{
     glm::vec3 position;
     glm::vec3 target;
     glm::vec3 worldUp;
-    glm::vec3 right;
     glm::vec3 forward;
     glm::vec3 up;
+    glm::vec3 right;
     glm::vec3 moveDirection;
-    glm::vec2 lastMouse;
+    glm::vec3* targetPosition;
     glm::vec2 angle;
+
     f32 fov;
-    f32 yaw;
-    f32 pitch;
     f32 zoomLevel;
 
 public:
     Camera();
     ~Camera();
-    void InitializeCamera(glm::vec3 position);
-    void Update(glm::vec3 targetPosition);
+    void InitializeCamera(glm::vec3* targetPosition);
+    void Update();
     glm::mat4 GetViewProjectionMatrix();
-    glm::vec3 GetPosition();
-    glm::vec3 GetTarget();
-    glm::vec3 GetRight();
-    glm::vec3 GetForward();
-    glm::vec3 GetUp();
+    glm::vec2* GetAngle();
+    glm::vec3* GetPosition();
+    glm::vec3* GetTarget();
+    glm::vec3* GetUp();
+    glm::vec3* GetRight();
     f32 GetFov();
 };

@@ -76,7 +76,7 @@ void RenderObject::AddAttribute(u8 isInstanced, u8 isFloat, i32 attributeType, i
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void RenderObject::Draw(DrawType drawType, i32 primitiveType, i32 count){
+void RenderObject::Draw(DrawType drawType, i32 primitiveType, i32 count, u32 instanceCount){
     glBindVertexArray(vao);
 
     switch(drawType){
@@ -85,6 +85,12 @@ void RenderObject::Draw(DrawType drawType, i32 primitiveType, i32 count){
             break;
         case DRAW_ELEMENT:  
             glDrawElements(primitiveType, count, GL_UNSIGNED_INT, 0);
+            break;
+        case DRAW_A_INSTANCED:
+            glDrawArraysInstanced(primitiveType, 0, count, instanceCount);
+            break;
+        case DRAW_E_INSTANCED:
+            glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, 0, instanceCount);
             break;
     }
     glBindVertexArray(0);

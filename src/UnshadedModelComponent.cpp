@@ -1,7 +1,7 @@
-#include "model_component.h"
+#include "unshaded_model_component.h"
 
-ModelComponent::ModelComponent(std::string modelPath, std::string texturePath){
-    shader.InitializeShader("model_vertex.glsl", "model_fragment.glsl");
+UnshadedModelComponent::UnshadedModelComponent(std::string modelPath, std::string texturePath){
+    shader.InitializeShader("unshaded_vertex.glsl", "unshaded_fragment.glsl");
     texture.InitializeFromFile(texturePath);
     model.LoadModel(modelPath);
     renderObject.IntializeRenderObject();
@@ -13,14 +13,14 @@ ModelComponent::ModelComponent(std::string modelPath, std::string texturePath){
     renderObject.AddAttribute(false, true, GL_FLOAT, 2, 8 * sizeof(float), 6 * sizeof(float));
 }
 
-ModelComponent::~ModelComponent(){
+UnshadedModelComponent::~UnshadedModelComponent(){
     model.DestroyModel();
     renderObject.DestroyRenderObject();
     texture.DestroyTexture();
     shader.DestroyShader();
 }
     
-void ModelComponent::Draw(glm::mat4 projectionView, glm::mat4 modelMatrix){
+void UnshadedModelComponent::Draw(glm::mat4 projectionView, glm::mat4 modelMatrix){
     shader.UseProgram();
     texture.ActivateTexture(0);
     glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projectionView));

@@ -16,8 +16,8 @@ public:
 	GameObject();
 	~GameObject();
 
-	glm::vec3 position;
-	glm::vec3 rotation;
+	glm::vec3 position = glm::vec3(0);
+	glm::vec3 rotation = glm::vec3(0);
 	glm::vec3 scale = glm::vec3(1,1,1);
 
 	void AddComponent(Component* component);
@@ -25,6 +25,14 @@ public:
 	void Update(float elapsedTime);
 	void Draw(glm::mat4 projectioView);
 	void AddDrawComponent(DrawComponent* drawComponent);
+
+	template<class T>
+	T* GetDrawComponentComponent()
+	{
+		T* type = dynamic_cast<T*>(drawComponent);
+		if (type) return type;
+		return nullptr;
+	}
 
 	template<class T>
 	T* GetComponent()

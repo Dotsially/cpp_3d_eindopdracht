@@ -15,6 +15,8 @@ enum BufferType{
 enum DrawType{
     DRAW_ARRAY,
     DRAW_ELEMENT,
+    DRAW_A_INSTANCED,
+    DRAW_E_INSTANCED,
 };
 
 typedef struct {
@@ -50,6 +52,6 @@ public:
 
     void BufferData(BufferType bufferType, i32 drawType, void* data, i32 dataLength, i32 dataSize);
     void AddAttribute(u8 isInstanced, u8 isFloat, i32 attributeType, i32 vectorCount, i32 stride, i32 offset);
-    void Draw(DrawType drawType, i32 primitiveType, i32 count);
+    void Draw(DrawType drawType, i32 primitiveType, i32 count, u32 instanceCount);
     void DrawIndirect(DrawType drawType, i32 primitiveType, i32 count);
 };
