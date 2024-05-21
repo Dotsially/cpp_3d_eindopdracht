@@ -32,10 +32,11 @@ C++ en Datastructuren:
     De gebruiker kan vrij zijn/haar camera draaien en de spaceship besturen.
     Alle planeten en de spaceship worden belicht door de zon.
  -  Lighting: 
-    Er wordt gebruikt gemaakt van Gouraud shading.
+    Er wordt gebruikt gemaakt van Gouraud shading. De oorsprong van de lichtbron is de zon. 
  -  Alpha blending:
-    De UI maakt gebruikt van alpha blending.
- - 
+    De sterren texture maakt gebruikt van alpha blending.
+ -  Instanced Drawing:
+    Elk ster is een quad die instanced wordt in de scene. De scene heeft 10000 sterren.
 Controls:
    -Space: Forward
    -Left Shift: Backwards

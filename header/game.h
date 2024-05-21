@@ -12,13 +12,6 @@
 #include "follow_component.h"
 #include "particle_component.h"
 
-//Box data together
-struct Background{
-    RenderObject render;
-    Texture texture;
-    Shader shader;
-};
-
 class Game{
 private:
     std::string title = "";
@@ -28,9 +21,7 @@ private:
 
     Window window;
     Camera camera;
-    Background ui;
     std::vector<GameObject*> gameObjects;
-    
 
     void Init();
     void Update();

@@ -22,14 +22,6 @@ void Game::Run(){
 void Game::Init(){
     window.InitializeWindow(title, screenWidth, screenHeight);
 
-    //initialize the ui
-    std::vector<f32> backgroundQuad = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
-    ui.texture.InitializeFromFile("space.png");
-    ui.shader.InitializeShader("basic_vertex.glsl", "basic_fragment.glsl");
-    ui.render.IntializeRenderObject();
-    ui.render.BufferData(VERTEX_BUFFER, GL_STATIC_DRAW, backgroundQuad.data(), backgroundQuad.size(), sizeof(f32));
-    ui.render.AddAttribute(false, true, GL_FLOAT, 2,0,0);
-
     GameObject* spaceShip = new GameObject();
     spaceShip->AddDrawComponent(new ModelComponent("spaceship/spaceship.gltf", "spaceship_palette.png"));
     spaceShip->AddComponent(new SpaceshipComponent(camera.GetAngle()));
@@ -37,10 +29,6 @@ void Game::Init(){
     spaceShip->scale = glm::vec3(0.1f);
     gameObjects.push_back(spaceShip);
 
-    GameObject* smokeParticle = new GameObject();
-    spaceShip->AddDrawComponent(new ParticleComponent(&spaceShip->position, camera.GetRight(), camera.GetUp(), PARTICLE_POINT, 20, 0, "star.png"));
-    
-    
     GameObject* stars = new GameObject();
     stars->AddDrawComponent(new ParticleComponent(&spaceShip->position, camera.GetRight(), camera.GetUp(), PARTICLE_SPHERE, 10000, 200, "star.png"));
     gameObjects.push_back(stars);
@@ -122,12 +110,6 @@ void Game::Render(){
     for(auto gameObject : gameObjects){
         gameObject->Draw(projectionView);
     }
-
-    // //Make it so the background is renderered behind every object
-    // glDepthFunc(GL_EQUAL);
-    // background.shader.UseProgram();
-    // background.texture.ActivateTexture(0);
-    // background.render.Draw(DRAW_ARRAY, GL_TRIANGLE_STRIP, 4);
 
     window.SwapBuffers();
 }
